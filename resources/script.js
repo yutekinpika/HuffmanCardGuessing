@@ -138,12 +138,12 @@ const sampleCards = dataArray();
 // 符号化を実行
 let { huffmanTree, huffmanCodes } = huffmanCoding(sampleCards);
 
-console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
+//console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
 
 // 質問をランダム化
-questionRandomizer(huffmanTree, huffmanCodes);
-
-console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
+huffmanTree = questionRandomizer(huffmanTree);
+huffmanCodes = generateCodes(huffmanTree);
+//console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
 
 
 function collectKeysByBit(input) {
@@ -207,6 +207,9 @@ function displayRetryButton() {
     retryButton.onclick = function() {
         currentQuestionIndex = 0; // 質問インデックスをリセット
         answers = []; // 答えもリセット
+        huffmanTree = questionRandomizer(huffmanTree);// 質問をランダム化
+        huffmanCodes = generateCodes(huffmanTree);
+        
         displayQuestion(); // 初回質問を表示
         retryButton.remove(); // ボタンを削除
         // ボタンを再表示
@@ -240,24 +243,24 @@ document.getElementById("noBtn").onclick = function() {
 displayQuestion();
 
 // ハフマン木の枝の0/1をランダムに変換する
-function questionRandomizer(huffmanTree, huffmanCodes){
+function questionRandomizer(huffmanTree){
     
     function swapChildrenAtDepth(node, rand, currentDepth = 0) {
-        if (node === null) return;
+        if (node === null) return null;
     
-        // randのi桁目が1の場合、ノードの左右を入れ替える
+        // 新しいノードを作成
+        const newNode = new Node(node.char, node.freq);
+    
+        // randのi桁目が1の場合、左右を入れ替える
         if (currentDepth < rand.length && rand[currentDepth] === '1') {
-            console.log(currentDepth);
-            // 左右を入れ替え
-            //[node.left, node.right] = [node.right, node.left];
-            node.temp = node.left;
-            node.left = node.right;
-            node.right = node.temp;
+            newNode.left = swapChildrenAtDepth(node.right, rand, currentDepth + 1); // 右を左に
+            newNode.right = swapChildrenAtDepth(node.left, rand, currentDepth + 1); // 左を右に
+        } else {
+            newNode.left = swapChildrenAtDepth(node.left, rand, currentDepth + 1);
+            newNode.right = swapChildrenAtDepth(node.right, rand, currentDepth + 1);
         }
     
-        // 次の深さへ再帰的に進む
-        swapChildrenAtDepth(node.left, rand, currentDepth + 1);
-        swapChildrenAtDepth(node.right, rand, currentDepth + 1);
+        return newNode; // 新しい木のルートを返す
     }
 
     function generateBinaryRandom(bits) {
@@ -268,10 +271,8 @@ function questionRandomizer(huffmanTree, huffmanCodes){
     }
 
     const rand = generateBinaryRandom(53);
-    console.log(rand);
 
-    swapChildrenAtDepth(huffmanTree, rand);
-    huffmanCodes = generateCodes(huffmanTree);
+    return swapChildrenAtDepth(huffmanTree, rand);
 }
 
 
