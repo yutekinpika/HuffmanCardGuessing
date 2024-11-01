@@ -167,7 +167,26 @@ function collectKeysByBit(input) {
 }
 
 function sortNestedArrays(input) {
-    return input.map(innerArray => innerArray.slice().sort());
+    // スートとランクの定義
+    const suitOrder = ['♠', '♡', '♣', '♢'];
+    const rankOrder = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+    // 比較関数の定義
+    function compareCards(cardA, cardB) {
+        const suitA = cardA[0];
+        const suitB = cardB[0];
+        const rankA = cardA.slice(1);
+        const rankB = cardB.slice(1);
+
+        // スートの比較
+        const suitComparison = suitOrder.indexOf(suitA) - suitOrder.indexOf(suitB);
+        if (suitComparison !== 0) return suitComparison;
+
+        // ランクの比較
+        return rankOrder.indexOf(rankA) - rankOrder.indexOf(rankB);
+    }
+
+    return input.map(innerArray => innerArray.slice().sort(compareCards));
 }
 
 // 人間が画面から探しやすくするために各質問で出す集合を並び替え
@@ -179,7 +198,23 @@ let answers = [];
 function displayQuestion() {
     if (currentQuestionIndex < cardQuestions.length) {
         const cards = cardQuestions[currentQuestionIndex];
-        const questionText = `下記の中にあなたの選んだカードは含まれていますか？\n${cards.join(' ')}`;
+        
+        // スートごとにカードをグループ化
+        const groupedCards = {};
+        cards.forEach(card => {
+            const suit = card[0]; // スートを取得
+            if (!groupedCards[suit]) {
+                groupedCards[suit] = [];
+            }
+            groupedCards[suit].push(card);
+        });
+
+        // スートごとにカードを整形して表示
+        const cardLines = Object.keys(groupedCards).map(suit => {
+            return `${groupedCards[suit].join(' ')}`;
+        }).join('\n'); // 各スートを改行で結合
+
+        const questionText = `下記の中にあなたの選んだカードは含まれていますか？\n${cardLines}`;
         document.getElementById("question").innerText = questionText;
     } else {
         encodeAndDecode();
