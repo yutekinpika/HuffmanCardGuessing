@@ -214,7 +214,7 @@ function displayQuestion() {
             return `${groupedCards[suit].join(' ')}`;
         }).join('\n'); // 各スートを改行で結合
 
-        const questionText = `下記の中にあなたの選んだカードは含まれていますか？\n${cardLines}`;
+        const questionText = `この中にあなたの選んだカードはありますか？\n${cardLines}`;
         document.getElementById("question").innerText = questionText;
     } else {
         encodeAndDecode();
