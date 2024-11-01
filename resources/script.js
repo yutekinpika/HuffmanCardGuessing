@@ -207,17 +207,21 @@ function displayRetryButton() {
     retryButton.onclick = function() {
         currentQuestionIndex = 0; // 質問インデックスをリセット
         answers = []; // 答えもリセット
-        huffmanTree = questionRandomizer(huffmanTree);// 質問をランダム化
+        huffmanTree = questionRandomizer(huffmanTree); // 質問をランダム化
         huffmanCodes = generateCodes(huffmanTree);
-        
+
         displayQuestion(); // 初回質問を表示
         retryButton.remove(); // ボタンを削除
         // ボタンを再表示
         document.getElementById("yesBtn").style.display = 'inline-block';
         document.getElementById("noBtn").style.display = 'inline-block';
     };
-    document.body.appendChild(retryButton); // ボタンを画面に追加
+
+    // ボタンを特定のコンテナに追加
+    const container = document.getElementById("container"); // ここでコンテナを取得
+    container.appendChild(retryButton); // コンテナ内にボタンを追加
 }
+
 
 document.getElementById("yesBtn").onclick = function() {
     answers.push('1'); // Yesの場合、1を追加
@@ -281,58 +285,58 @@ function questionRandomizer(huffmanTree){
 function dataArray(){
     const sampleCards = [];
 
-    for(let i=0;i<49;i++)sampleCards.push('AS');
-    for(let i=0;i<26;i++)sampleCards.push('7H');
-    for(let i=0;i<21;i++)sampleCards.push('AH');
-    for(let i=0;i<18;i++)sampleCards.push('JS');
-    for(let i=0;i<18;i++)sampleCards.push('KS');
-    for(let i=0;i<16;i++)sampleCards.push('7S');
-    for(let i=0;i<15;i++)sampleCards.push('3H');
-    for(let i=0;i<15;i++)sampleCards.push('8S');
-    for(let i=0;i<14.;i++)sampleCards.push('3S');
-    for(let i=0;i<13;i++)sampleCards.push('AD');
-    for(let i=0;i<12;i++)sampleCards.push('7D');
-    for(let i=0;i<12;i++)sampleCards.push('5H');
-    for(let i=0;i<10;i++)sampleCards.push('8H');
-    for(let i=0;i<10;i++)sampleCards.push('QH');
-    for(let i=0;i<10;i++)sampleCards.push('2S');
-    for(let i=0;i<9;i++)sampleCards.push('6S');
-    for(let i=0;i<8;i++)sampleCards.push('8D');
-    for(let i=0;i<8;i++)sampleCards.push('7C');
-    for(let i=0;i<8;i++)sampleCards.push('JC');
-    for(let i=0;i<8;i++)sampleCards.push('2H');
-    for(let i=0;i<8;i++)sampleCards.push('4H');
-    for(let i=0;i<8;i++)sampleCards.push('10H');
-    for(let i=0;i<8;i++)sampleCards.push('4S');
-    for(let i=0;i<7;i++)sampleCards.push('3C');
-    for(let i=0;i<7;i++)sampleCards.push('5S');
-    for(let i=0;i<6;i++)sampleCards.push('JH');
-    for(let i=0;i<6;i++)sampleCards.push('10S');
-    for(let i=0;i<6;i++)sampleCards.push('QS');
-    for(let i=0;i<5;i++)sampleCards.push('4D');
-    for(let i=0;i<5;i++)sampleCards.push('4C');
-    for(let i=0;i<5;i++)sampleCards.push('5C');
-    for(let i=0;i<5;i++)sampleCards.push('9S');
-    for(let i=0;i<4;i++)sampleCards.push('9D');
-    for(let i=0;i<4;i++)sampleCards.push('KD');
-    for(let i=0;i<3;i++)sampleCards.push('10D');
-    for(let i=0;i<3;i++)sampleCards.push('QD');
-    for(let i=0;i<3;i++)sampleCards.push('AC');
-    for(let i=0;i<3;i++)sampleCards.push('2C');
-    for(let i=0;i<3;i++)sampleCards.push('6C');
-    for(let i=0;i<3;i++)sampleCards.push('9C');
-    for(let i=0;i<3;i++)sampleCards.push('QC');
-    for(let i=0;i<3;i++)sampleCards.push('6H');
-    for(let i=0;i<3;i++)sampleCards.push('KH');
-    for(let i=0;i<2;i++)sampleCards.push('2D');
-    for(let i=0;i<2;i++)sampleCards.push('3D');
-    for(let i=0;i<2;i++)sampleCards.push('5D');
-    for(let i=0;i<2;i++)sampleCards.push('6D');
-    for(let i=0;i<2;i++)sampleCards.push('8C');
-    for(let i=0;i<2;i++)sampleCards.push('9H');
-    for(let i=0;i<1;i++)sampleCards.push('JD');
-    for(let i=0;i<1;i++)sampleCards.push('10C');
-    for(let i=0;i<1;i++)sampleCards.push('KC');
+    for(let i=0;i<49;i++)sampleCards.push('♠A');
+    for(let i=0;i<26;i++)sampleCards.push('♡7');
+    for(let i=0;i<21;i++)sampleCards.push('♡A');
+    for(let i=0;i<18;i++)sampleCards.push('♠J');
+    for(let i=0;i<18;i++)sampleCards.push('♠K');
+    for(let i=0;i<16;i++)sampleCards.push('♠7');
+    for(let i=0;i<15;i++)sampleCards.push('♡3');
+    for(let i=0;i<15;i++)sampleCards.push('♠8');
+    for(let i=0;i<14.;i++)sampleCards.push('♠3');
+    for(let i=0;i<13;i++)sampleCards.push('♢A');
+    for(let i=0;i<12;i++)sampleCards.push('♢7');
+    for(let i=0;i<12;i++)sampleCards.push('♡5');
+    for(let i=0;i<10;i++)sampleCards.push('♡8');
+    for(let i=0;i<10;i++)sampleCards.push('♡Q');
+    for(let i=0;i<10;i++)sampleCards.push('♠2');
+    for(let i=0;i<9;i++)sampleCards.push('♠6');
+    for(let i=0;i<8;i++)sampleCards.push('♢8');
+    for(let i=0;i<8;i++)sampleCards.push('♣7');
+    for(let i=0;i<8;i++)sampleCards.push('♣J');
+    for(let i=0;i<8;i++)sampleCards.push('♡2');
+    for(let i=0;i<8;i++)sampleCards.push('♡4');
+    for(let i=0;i<8;i++)sampleCards.push('♡10');
+    for(let i=0;i<8;i++)sampleCards.push('♠4');
+    for(let i=0;i<7;i++)sampleCards.push('♣3');
+    for(let i=0;i<7;i++)sampleCards.push('♠5');
+    for(let i=0;i<6;i++)sampleCards.push('♡J');
+    for(let i=0;i<6;i++)sampleCards.push('♠10');
+    for(let i=0;i<6;i++)sampleCards.push('♠Q');
+    for(let i=0;i<5;i++)sampleCards.push('♢4');
+    for(let i=0;i<5;i++)sampleCards.push('♣4');
+    for(let i=0;i<5;i++)sampleCards.push('♣5');
+    for(let i=0;i<5;i++)sampleCards.push('♠9');
+    for(let i=0;i<4;i++)sampleCards.push('♢9');
+    for(let i=0;i<4;i++)sampleCards.push('♢K');
+    for(let i=0;i<3;i++)sampleCards.push('♢10');
+    for(let i=0;i<3;i++)sampleCards.push('♢Q');
+    for(let i=0;i<3;i++)sampleCards.push('♣A');
+    for(let i=0;i<3;i++)sampleCards.push('♣2');
+    for(let i=0;i<3;i++)sampleCards.push('♣6');
+    for(let i=0;i<3;i++)sampleCards.push('♣9');
+    for(let i=0;i<3;i++)sampleCards.push('♣Q');
+    for(let i=0;i<3;i++)sampleCards.push('♡6');
+    for(let i=0;i<3;i++)sampleCards.push('♡K');
+    for(let i=0;i<2;i++)sampleCards.push('♢2');
+    for(let i=0;i<2;i++)sampleCards.push('♢3');
+    for(let i=0;i<2;i++)sampleCards.push('♢5');
+    for(let i=0;i<2;i++)sampleCards.push('♢6');
+    for(let i=0;i<2;i++)sampleCards.push('♣8');
+    for(let i=0;i<2;i++)sampleCards.push('♡9');
+    for(let i=0;i<1;i++)sampleCards.push('♢J');
+    for(let i=0;i<1;i++)sampleCards.push('♣10');
+    for(let i=0;i<1;i++)sampleCards.push('♣K');
 
     return sampleCards;
 }

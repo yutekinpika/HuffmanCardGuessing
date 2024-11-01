@@ -1,0 +1,35 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* ビューポートの高さを100%に */
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* 背景色 */
+}
+#container {
+    text-align: center; /* テキストを中央揃え */
+    padding: 20px;
+    background-color: white; /* 背景色 */
+    border-radius: 8px; /* 角を丸める */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影 */
+}
+#question {
+    margin: 20px 0;
+    font-size: 18px;
+}
+.button {
+    display: inline-block; /* インラインブロックにしてサイズを指定 */
+    margin: 10px; /* 上下のマージン */
+    padding: 12px 24px; /* パディングを調整 */
+    font-size: 18px; /* フォントサイズ */
+    color: white; /* 文字色 */
+    background-color: #007bff; /* ボタンの背景色 */
+    border: none; /* ボーダーなし */
+    border-radius: 5px; /* 角を丸める */
+    text-decoration: none; /* テキストの下線なし */
+    transition: background-color 0.3s ease; /* ホバー時のトランジション */
+}
+.button:hover {
+    background-color: #0056b3; /* ホバー時の色 */
+}
