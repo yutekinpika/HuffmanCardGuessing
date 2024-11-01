@@ -132,64 +132,19 @@ function isDecodable(node, encodedStr) {
     return currentNode.left === null && currentNode.right === null;
 }
 
-const sampleCards = [];
+// 情報源となる配列
+const sampleCards = dataArray();
 
-for(let i=0;i<49;i++)sampleCards.push('AS');
-for(let i=0;i<26;i++)sampleCards.push('7H');
-for(let i=0;i<21;i++)sampleCards.push('AH');
-for(let i=0;i<18;i++)sampleCards.push('JS');
-for(let i=0;i<18;i++)sampleCards.push('KS');
-for(let i=0;i<16;i++)sampleCards.push('7S');
-for(let i=0;i<15;i++)sampleCards.push('3H');
-for(let i=0;i<15;i++)sampleCards.push('8S');
-for(let i=0;i<14.;i++)sampleCards.push('3S');
-for(let i=0;i<13;i++)sampleCards.push('AD');
-for(let i=0;i<12;i++)sampleCards.push('7D');
-for(let i=0;i<12;i++)sampleCards.push('5H');
-for(let i=0;i<10;i++)sampleCards.push('8H');
-for(let i=0;i<10;i++)sampleCards.push('QH');
-for(let i=0;i<10;i++)sampleCards.push('2S');
-for(let i=0;i<9;i++)sampleCards.push('6S');
-for(let i=0;i<8;i++)sampleCards.push('8D');
-for(let i=0;i<8;i++)sampleCards.push('7C');
-for(let i=0;i<8;i++)sampleCards.push('JC');
-for(let i=0;i<8;i++)sampleCards.push('2H');
-for(let i=0;i<8;i++)sampleCards.push('4H');
-for(let i=0;i<8;i++)sampleCards.push('10H');
-for(let i=0;i<8;i++)sampleCards.push('4S');
-for(let i=0;i<7;i++)sampleCards.push('3C');
-for(let i=0;i<7;i++)sampleCards.push('5S');
-for(let i=0;i<6;i++)sampleCards.push('JH');
-for(let i=0;i<6;i++)sampleCards.push('10S');
-for(let i=0;i<6;i++)sampleCards.push('QS');
-for(let i=0;i<5;i++)sampleCards.push('4D');
-for(let i=0;i<5;i++)sampleCards.push('4C');
-for(let i=0;i<5;i++)sampleCards.push('5C');
-for(let i=0;i<5;i++)sampleCards.push('9S');
-for(let i=0;i<4;i++)sampleCards.push('9D');
-for(let i=0;i<4;i++)sampleCards.push('KD');
-for(let i=0;i<3;i++)sampleCards.push('10D');
-for(let i=0;i<3;i++)sampleCards.push('QD');
-for(let i=0;i<3;i++)sampleCards.push('AC');
-for(let i=0;i<3;i++)sampleCards.push('2C');
-for(let i=0;i<3;i++)sampleCards.push('6C');
-for(let i=0;i<3;i++)sampleCards.push('9C');
-for(let i=0;i<3;i++)sampleCards.push('QC');
-for(let i=0;i<3;i++)sampleCards.push('6H');
-for(let i=0;i<3;i++)sampleCards.push('KH');
-for(let i=0;i<2;i++)sampleCards.push('2D');
-for(let i=0;i<2;i++)sampleCards.push('3D');
-for(let i=0;i<2;i++)sampleCards.push('5D');
-for(let i=0;i<2;i++)sampleCards.push('6D');
-for(let i=0;i<2;i++)sampleCards.push('8C');
-for(let i=0;i<2;i++)sampleCards.push('9H');
-for(let i=0;i<1;i++)sampleCards.push('JD');
-for(let i=0;i<1;i++)sampleCards.push('10C');
-for(let i=0;i<1;i++)sampleCards.push('KC');
+// 符号化を実行
+let { huffmanTree, huffmanCodes } = huffmanCoding(sampleCards);
 
-const { huffmanTree, huffmanCodes } = huffmanCoding(sampleCards);
+//console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
 
-console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
+// 質問をランダム化
+huffmanTree = questionRandomizer(huffmanTree);
+huffmanCodes = generateCodes(huffmanTree);
+//console.log(Object.entries(huffmanCodes).sort((a, b) => a[1].length - b[1].length));
+
 
 function collectKeysByBit(input) {
     // まず、最大のビット数を見つける
@@ -210,13 +165,13 @@ function collectKeysByBit(input) {
 
     return result;
 }
+
 function sortNestedArrays(input) {
     return input.map(innerArray => innerArray.slice().sort());
 }
 
+// 人間が画面から探しやすくするために各質問で出す集合を並び替え
 const cardQuestions = sortNestedArrays(collectKeysByBit(huffmanCodes));
-
-console.log(cardQuestions);
 
 let currentQuestionIndex = 0;
 let answers = [];
@@ -236,6 +191,32 @@ function encodeAndDecode() {
 
     const decodedCards = decodeHuffman(huffmanTree, encodedBits);
     document.getElementById("question").innerText = `あなたが選んだカードは: ${decodedCards}`;
+
+    displayRetryButton();
+}
+
+function displayRetryButton() {
+    // ボタンを消去する
+    document.getElementById("yesBtn").style.display = 'none';
+    document.getElementById("noBtn").style.display = 'none';
+
+    // もう一度やってみるボタンを追加
+    const retryButton = document.createElement("button");
+    retryButton.innerText = "もう一度やってみる";
+    retryButton.className = "button";
+    retryButton.onclick = function() {
+        currentQuestionIndex = 0; // 質問インデックスをリセット
+        answers = []; // 答えもリセット
+        huffmanTree = questionRandomizer(huffmanTree);// 質問をランダム化
+        huffmanCodes = generateCodes(huffmanTree);
+        
+        displayQuestion(); // 初回質問を表示
+        retryButton.remove(); // ボタンを削除
+        // ボタンを再表示
+        document.getElementById("yesBtn").style.display = 'inline-block';
+        document.getElementById("noBtn").style.display = 'inline-block';
+    };
+    document.body.appendChild(retryButton); // ボタンを画面に追加
 }
 
 document.getElementById("yesBtn").onclick = function() {
@@ -260,3 +241,98 @@ document.getElementById("noBtn").onclick = function() {
 
 // 初回質問の表示
 displayQuestion();
+
+// ハフマン木の枝の0/1をランダムに変換する
+function questionRandomizer(huffmanTree){
+    
+    function swapChildrenAtDepth(node, rand, currentDepth = 0) {
+        if (node === null) return null;
+    
+        // 新しいノードを作成
+        const newNode = new Node(node.char, node.freq);
+    
+        // randのi桁目が1の場合、左右を入れ替える
+        if (currentDepth < rand.length && rand[currentDepth] === '1') {
+            newNode.left = swapChildrenAtDepth(node.right, rand, currentDepth + 1); // 右を左に
+            newNode.right = swapChildrenAtDepth(node.left, rand, currentDepth + 1); // 左を右に
+        } else {
+            newNode.left = swapChildrenAtDepth(node.left, rand, currentDepth + 1);
+            newNode.right = swapChildrenAtDepth(node.right, rand, currentDepth + 1);
+        }
+    
+        return newNode; // 新しい木のルートを返す
+    }
+
+    function generateBinaryRandom(bits) {
+        // 0 から 2^bits - 1 の範囲でランダムな整数を生成
+        const randomNumber = Math.floor(Math.random() * Math.pow(2, bits));
+        // 整数を二進数に変換し、ビット数に合わせてゼロパディング
+        return randomNumber.toString(2).padStart(bits, '0');
+    }
+
+    const rand = generateBinaryRandom(53);
+
+    return swapChildrenAtDepth(huffmanTree, rand);
+}
+
+
+
+// ハフマン木作成のためのデータ
+function dataArray(){
+    const sampleCards = [];
+
+    for(let i=0;i<49;i++)sampleCards.push('AS');
+    for(let i=0;i<26;i++)sampleCards.push('7H');
+    for(let i=0;i<21;i++)sampleCards.push('AH');
+    for(let i=0;i<18;i++)sampleCards.push('JS');
+    for(let i=0;i<18;i++)sampleCards.push('KS');
+    for(let i=0;i<16;i++)sampleCards.push('7S');
+    for(let i=0;i<15;i++)sampleCards.push('3H');
+    for(let i=0;i<15;i++)sampleCards.push('8S');
+    for(let i=0;i<14.;i++)sampleCards.push('3S');
+    for(let i=0;i<13;i++)sampleCards.push('AD');
+    for(let i=0;i<12;i++)sampleCards.push('7D');
+    for(let i=0;i<12;i++)sampleCards.push('5H');
+    for(let i=0;i<10;i++)sampleCards.push('8H');
+    for(let i=0;i<10;i++)sampleCards.push('QH');
+    for(let i=0;i<10;i++)sampleCards.push('2S');
+    for(let i=0;i<9;i++)sampleCards.push('6S');
+    for(let i=0;i<8;i++)sampleCards.push('8D');
+    for(let i=0;i<8;i++)sampleCards.push('7C');
+    for(let i=0;i<8;i++)sampleCards.push('JC');
+    for(let i=0;i<8;i++)sampleCards.push('2H');
+    for(let i=0;i<8;i++)sampleCards.push('4H');
+    for(let i=0;i<8;i++)sampleCards.push('10H');
+    for(let i=0;i<8;i++)sampleCards.push('4S');
+    for(let i=0;i<7;i++)sampleCards.push('3C');
+    for(let i=0;i<7;i++)sampleCards.push('5S');
+    for(let i=0;i<6;i++)sampleCards.push('JH');
+    for(let i=0;i<6;i++)sampleCards.push('10S');
+    for(let i=0;i<6;i++)sampleCards.push('QS');
+    for(let i=0;i<5;i++)sampleCards.push('4D');
+    for(let i=0;i<5;i++)sampleCards.push('4C');
+    for(let i=0;i<5;i++)sampleCards.push('5C');
+    for(let i=0;i<5;i++)sampleCards.push('9S');
+    for(let i=0;i<4;i++)sampleCards.push('9D');
+    for(let i=0;i<4;i++)sampleCards.push('KD');
+    for(let i=0;i<3;i++)sampleCards.push('10D');
+    for(let i=0;i<3;i++)sampleCards.push('QD');
+    for(let i=0;i<3;i++)sampleCards.push('AC');
+    for(let i=0;i<3;i++)sampleCards.push('2C');
+    for(let i=0;i<3;i++)sampleCards.push('6C');
+    for(let i=0;i<3;i++)sampleCards.push('9C');
+    for(let i=0;i<3;i++)sampleCards.push('QC');
+    for(let i=0;i<3;i++)sampleCards.push('6H');
+    for(let i=0;i<3;i++)sampleCards.push('KH');
+    for(let i=0;i<2;i++)sampleCards.push('2D');
+    for(let i=0;i<2;i++)sampleCards.push('3D');
+    for(let i=0;i<2;i++)sampleCards.push('5D');
+    for(let i=0;i<2;i++)sampleCards.push('6D');
+    for(let i=0;i<2;i++)sampleCards.push('8C');
+    for(let i=0;i<2;i++)sampleCards.push('9H');
+    for(let i=0;i<1;i++)sampleCards.push('JD');
+    for(let i=0;i<1;i++)sampleCards.push('10C');
+    for(let i=0;i<1;i++)sampleCards.push('KC');
+
+    return sampleCards;
+}
