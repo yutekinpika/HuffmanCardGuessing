@@ -205,16 +205,7 @@ function displayRetryButton() {
     retryButton.innerText = "もう一度やってみる";
     retryButton.className = "button";
     retryButton.onclick = function() {
-        currentQuestionIndex = 0; // 質問インデックスをリセット
-        answers = []; // 答えもリセット
-        huffmanTree = questionRandomizer(huffmanTree); // 質問をランダム化
-        huffmanCodes = generateCodes(huffmanTree);
-
-        displayQuestion(); // 初回質問を表示
-        retryButton.remove(); // ボタンを削除
-        // ボタンを再表示
-        document.getElementById("yesBtn").style.display = 'inline-block';
-        document.getElementById("noBtn").style.display = 'inline-block';
+        window.location.href = './index.html'; // index.htmlに遷移
     };
 
     // ボタンを特定のコンテナに追加
